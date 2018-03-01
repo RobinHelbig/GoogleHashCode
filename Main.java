@@ -16,7 +16,13 @@ public class Main
     	Main main = new Main();
     	System.out.println("Hallo");
     	while(true) {
-    		
+    		System.out.println("Test");
+    		try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     }
     
