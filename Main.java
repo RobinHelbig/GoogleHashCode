@@ -12,6 +12,14 @@ public class Main
        IO.save(data);
     }
     
+    public static void main(String[] args) {
+    	Main main = new Main();
+    	System.out.println("Hallo");
+    	while(true) {
+    		
+    	}
+    }
+    
     public ArrayList<Integer> sort(ArrayList<Integer> array){
         for(int i = 0;i<array.size()-1;i++){
             for(int j = i+1; j<array.size();j++){
