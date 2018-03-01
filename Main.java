@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.ArrayList;
 import java.io.*;
 public class Main
 {   
@@ -19,71 +18,100 @@ public class Main
 			Vehicle vehicle = new Vehicle(i);
 			vehicles.add(vehicle);
 		}
-		for (int i = 0; i <= parameters.get(5); i++) {
-			ArrayList<Vehicle> leftVehicles = new ArrayList<>();
-			for (Vehicle vehicle : vehicles) {
-				if (vehicle.getCurrentRide() == null) {
-					leftVehicles.add(vehicle);
-				} else if(vehicle.getCurrentRide().getRealEndTime() >= i) {
-					vehicle.setCurrentRide(null, parameters.get(5));
-				}
-			}
-			if (rides.size() == 0) {
-				break;
-			}
-			RideToVehicle[] mustRides = new RideToVehicle[rides.size()];
-			for(int v = 0; v < leftVehicles.size(); v++) {
-				Vehicle vehicle = leftVehicles.get(v);
-				for (int r = 0; r < rides.size(); r++) {
-					Ride ride = rides.get(r);
-					int minStart = i + vehicle.getDistanceTo(ride.getStartX(), ride.getStartY());
-					if (minStart == ride.getEndTime() - ride.getDistance()) {
-						RideToVehicle rtv = new RideToVehicle(ride, vehicle, minStart);
-						if (mustRides[r] == null) {
-							mustRides[r] = rtv;
-						} else if (mustRides[r].compareTo(rtv) < 0) {
-							mustRides[r] = rtv;
-						}
-					}
-				}
-			}
-			for (RideToVehicle rtv : mustRides) {
-				if (rtv != null) {
-					rtv.getVehicle().setCurrentRide(rtv.getRide(), parameters.get(5));
-					leftVehicles.remove(rtv.getVehicle());
-					rides.remove(rtv.getRide());
-				}
-				
-			}
-			for(Vehicle vehicle : leftVehicles) {
-				rides.sort(new Comparator<Ride>() {
+		rides.sort(new Comparator<Ride>() {
 
-					@Override
-					public int compare(Ride o1, Ride o2) {
-						return vehicle.getDistanceTo(o1.getStartX(), o1.getStartY()) - vehicle.getDistanceTo(o2.getStartX(), o2.getStartY());
+			@Override
+			public int compare(Ride o1, Ride o2) {
+				return o1.getStartTime() - o2.getStartTime();
+			}
+		});
+		
+		int maxSteps = parameters.get(5);
+		int problem = 0;
+		for(int i = 0; i <= maxSteps; i++) {
+			ArrayList<Vehicle> freeVehicles = new ArrayList<>();
+			for (Vehicle vehicle : vehicles) {
+				if (vehicle.getCurrentRide() != null) {
+					if (vehicle.getCurrentRide().getRealEndTime() == i) {
+						vehicle.setCurrentRide(null, maxSteps);
+						freeVehicles.add(vehicle);
 					}
-				});
-				if (rides.size() > 0 && rides.get(0) != null) {
-					Ride ride = rides.get(0);
-					int distance = vehicle.getDistanceTo(ride.getStartX(), ride.getStartY()) + ride.getDistance();
-					if (distance + i <= parameters.get(5)) {
-						vehicle.setCurrentRide(rides.get(0), parameters.get(5));
-						rides.remove(ride);
-					}    				   
+				} else {
+					freeVehicles.add(vehicle);
 				}
 			}
+			ArrayList<Ride> remove = new ArrayList<Ride>();
+			for (Ride ride : rides) {
+				Vehicle vehicle = this.getNextFreeVehicle(freeVehicles, ride);
+				if (vehicle == null) {
+					continue;
+				}
+				int distance = vehicle.getDistanceTo(ride.getStartX(), ride.getStartY());
+				int time = distance + i + ride.getDistance();
+				System.out.println(time + " "+ ride.getEndTime());
+				ArrayList<Ride> in = this.getRidesInTime(rides, i, time);
+				for (Ride r : in) {
+					if (vehicle.getDistanceTo(r.getStartX(), r.getStartY()) < distance) {
+						continue;
+					}
+				}
+				if (time > ride.getEndTime()) {
+					problem++;
+					remove.add(ride);
+				} else {
+					vehicle.setCurrentRide(ride, maxSteps);
+					System.out.println("zuweisung");
+					remove.add(ride);
+				}
+			}
+			System.out.println("Step " + i);
+			rides.removeAll(remove);
 		}
+		
+		System.out.println("missing " + problem + " " + data.size());
+		int points = 0;
 		for (Vehicle vehicle : vehicles) {
 			ArrayList<Integer> out = new ArrayList<>();
-			System.out.println(vehicle.getRides());
 			out.add(vehicle.getRides().size());
 			for (Ride ride : vehicle.getRides()) {
+				points += ride.getDistance();
 				out.add(ride.getId());
+				if (ride.getRealStartTime() == ride.getStartTime()) {
+					points += parameters.get(4);
+				}
 			}
 			output.add(out);
 		}
-		System.out.println(output);
+		System.out.println(points + " " + output);
 		IO.save(output);
+	}
+	
+	public Vehicle getNextFreeVehicle(ArrayList<Vehicle> vehicles, Ride ride) {
+		vehicles.sort(new Comparator<Vehicle>() {
+
+			@Override
+			public int compare(Vehicle o1, Vehicle o2) {
+				return o1.getDistanceTo(ride.getStartX(), ride.getStartY()) - o2.getDistanceTo(ride.getStartX(), ride.getStartY());
+			}
+		});
+		if (vehicles.size() == 0) {
+			return null;
+		}
+		return vehicles.get(0);
+	}
+	
+	public ArrayList<Ride> getRidesInTime(ArrayList<Ride>rides, int startTime, int endTime) {
+		ArrayList<Ride> r = new ArrayList<>();
+		for (Ride ride : rides) {
+			if (
+					(ride.getStartTime() >= startTime && ride.getStartTime() <= endTime)
+					|| (ride.getEndTime() >= startTime && ride.getEndTime() <= endTime)
+					|| (ride.getStartTime() <= startTime && ride.getEndTime() >= endTime)
+					) {
+				r.add(ride);
+			}
+		}
+		return r;
 	}
 
 	public static void main(String[] args) {

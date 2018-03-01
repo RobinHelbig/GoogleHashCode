@@ -93,6 +93,9 @@ public class Ride {
 		this.distance = distance;
 	}
 	public int getRealStartTime() {
+		if (this.realStartTime < this.startTime) {
+			return this.startTime;
+		}
 		return realStartTime;
 	}
 	public void setRealStartTime(int realStartTime) {
