@@ -15,7 +15,7 @@ public class Main
     public static void main(String[] args) {
     	Main main = new Main();
     	System.out.println("Hallo");
-    	while(true) {
+    	while(main.getTimer()) {
     		System.out.println("Test");
     		try {
 				Thread.sleep(10000);
@@ -24,6 +24,10 @@ public class Main
 				e.printStackTrace();
 			}
     	}
+    }
+    
+    public boolean getTimer() {
+    	return false;
     }
     
     public ArrayList<Integer> sort(ArrayList<Integer> array){
