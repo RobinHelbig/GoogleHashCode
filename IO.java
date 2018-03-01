@@ -2,9 +2,13 @@ import java.io.*;
 import java.util.ArrayList;
 public class IO
 {
+	private static String low = "b_should_be_easy";
+	private static String two = "c_no_hurry";
+	private static String three = "d_metropolis";
+	private static String high = "e_high_bonus";
     public static ArrayList<ArrayList<Integer>> load(){
         ArrayList<ArrayList<Integer>> data = new ArrayList();
-        File f = new File("./b_should_be_easy.in");
+        File f = new File("./"+ high + ".in");
         try{
             FileReader filereader = new FileReader(f); 
             BufferedReader bufferedreader = new BufferedReader(filereader);
