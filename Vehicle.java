@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Vehicle {
 	
+	private int id;
 	private int posX;
 	private int posY;
 	
@@ -9,11 +10,18 @@ public class Vehicle {
 	
 	private ArrayList<Ride> rides;
 	
-	public Vehicle() {
+	private Ride currentRide;
+	
+	public Vehicle(int id) {
+		this.id = id;
 		this.posX = 0;
 		this.posY = 0;
 		this.step = 0;
 		this.rides = new ArrayList<>();
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 
 	public int getPosX() {
@@ -49,11 +57,13 @@ public class Vehicle {
 	}
 
 	public boolean add(Ride e, int maxStep) {
+		if (e == null) {
+			return true;
+		}
 		int newStep = this.getStep() + e.getDistance() + this.getDistanceTo(e.getStartX(), e.getStartY());
 		if (newStep > maxStep) {
 			return false;
 		}
-		System.out.println(newStep);
 		this.setStep(newStep);
 		this.setPosX(e.getEndX());
 		this.setPosY(e.getEndY());
@@ -70,6 +80,16 @@ public class Vehicle {
 			yDistance *= -1;
 		}
 		return xDistance + yDistance;
+	}
+
+	public Ride getCurrentRide() {
+		return currentRide;
+	}
+
+	public void setCurrentRide(Ride currentRide, int maxStep) {
+		if (this.add(currentRide, maxStep)) {
+			this.currentRide = currentRide;
+		}		
 	}
 
 }
