@@ -6,10 +6,18 @@ public class Main
     public Main()
     {
        ArrayList<ArrayList<Integer>> data = IO.load();
-       for(int i = 0; i< data.size(); i++){
-           data.set(i,sort(data.get(i)));
-        }
-       IO.save(data);
+       ArrayList<ArrayList<Integer>> output = new ArrayList<>();
+       ArrayList<Integer> parameters = data.get(0);
+       System.out.println(parameters);
+       for (int i = 0; i < parameters.get(2) && i <= parameters.get(3); i++) {
+    	   ArrayList<Integer> ride = new ArrayList<>();
+    	   ArrayList<Integer> abc = data.get(i + 1);
+    	   ride.add(1);
+    	   ride.add(i);
+    	   output.add(ride);
+       }
+       System.out.println(output);
+       IO.save(output);
     }
     
     public static void main(String[] args) {

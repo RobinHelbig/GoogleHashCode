@@ -4,7 +4,7 @@ public class IO
 {
     public static ArrayList<ArrayList<Integer>> load(){
         ArrayList<ArrayList<Integer>> data = new ArrayList();
-        File f = new File("./input.txt");
+        File f = new File("./b_should_be_easy.in");
         try{
             FileReader filereader = new FileReader(f); 
             BufferedReader bufferedreader = new BufferedReader(filereader);
