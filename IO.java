@@ -39,7 +39,7 @@ public class IO
                     if(j<rowData.size()-1)row = row + " ";
                 }
                 bw.write(row);
-                bw.newLine();
+                if(i<data.size()-1)bw.newLine();
             }               
             bw.close();  
         } catch ( IOException e ) { 
