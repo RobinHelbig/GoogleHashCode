@@ -8,7 +8,7 @@ public class IO
 	private static String high = "e_high_bonus";
     public static ArrayList<ArrayList<Integer>> load(){
         ArrayList<ArrayList<Integer>> data = new ArrayList();
-        File f = new File("./"+ high + ".in");
+        File f = new File("./"+ two + ".in");
         try{
             FileReader filereader = new FileReader(f); 
             BufferedReader bufferedreader = new BufferedReader(filereader);
